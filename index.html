@@ -1,516 +1,630 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JustSampleTools | Premium Android Utilities</title>
-    <meta name="description" content="Elevate your Android experience with FloatNet and WheelVolume. Precision tools for power users by JustSampleTools.">
+    <title>JustSampleTools — Precision Android Utilities</title>
+    <meta name="description" content="Small, precise instruments for Android: FloatNet network meter, WheelVolume dial control, and RemoteCap — the watch viewfinder for your camera.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
-            --card-bg: #0f0f0f;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.3);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --gradient-1: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            --gradient-2: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --gradient-3: linear-gradient(135deg, #ffb74d 0%, #ef6c00 100%);
+            --bg: #12100b;
+            --surface: #1a1712;
+            --raised: #211d16;
+            --line: rgba(243, 239, 231, 0.09);
+            --text: #f3efe7;
+            --dim: #a79e8d;
+            --amber: #ffb253;
+            --amber-deep: #cc7a1f;
+            --blue: #6faeff;
+            --yellow: #efc94c;
+            --live: #7ed9a0;
+            --radius: 20px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: 'IBM Plex Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
             overflow-x: hidden;
-            transition: all 0.3s ease;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1020px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
-        /* Device Switcher */
-        .device-switcher {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 8px;
-            background: var(--card-bg);
-            padding: 8px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--amber);
+            outline-offset: 3px;
+            border-radius: 4px;
         }
 
-        .device-btn {
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: transparent;
-            color: var(--text-dim);
-            font-size: 1.25rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* ── Top bar ─────────────────────────────────────────── */
+        .topbar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            padding: 28px 0 0;
         }
 
-        .device-btn:hover {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-main);
+        .wordmark {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            color: var(--text);
+            text-decoration: none;
         }
 
-        .device-btn.active {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 4px 12px var(--accent-glow);
+        .wordmark span { color: var(--amber); }
+
+        .topbar a.contact {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--dim);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
         }
 
-        /* Device-specific layouts */
-        body.view-desktop .container {
-            max-width: 1100px;
+        .topbar a.contact:hover { color: var(--text); border-color: var(--dim); }
+
+        /* ── Hero ────────────────────────────────────────────── */
+        .hero {
+            padding: 96px 0 72px;
         }
 
-        body.view-tablet .container {
-            max-width: 768px;
+        .eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 22px;
         }
 
-        body.view-mobile .container {
-            max-width: 480px;
-        }
-
-        body.view-mobile .app-grid {
-            grid-template-columns: 1fr !important;
-        }
-
-        body.view-tablet .app-grid {
-            grid-template-columns: 1fr !important;
-        }
-
-        body.view-mobile h1 {
-            font-size: 2.5rem !important;
-        }
-
-        body.view-mobile .tagline {
-            font-size: 1rem !important;
-        }
-
-        body.view-mobile header {
-            padding: 60px 0 40px !important;
-        }
-
-        /* Hero Section */
-        header {
-            padding: 100px 0 60px;
-            text-align: center;
-            position: relative;
-        }
-
-        header::before {
+        .eyebrow::before {
             content: '';
-            position: absolute;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            z-index: -1;
-            filter: blur(80px);
-        }
-
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 20px;
             display: inline-block;
-            filter: drop-shadow(0 0 20px var(--accent-glow));
+            width: 28px;
+            height: 1px;
+            background: var(--amber);
+            vertical-align: middle;
+            margin-right: 12px;
+            opacity: 0.7;
         }
 
         h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            margin-bottom: 16px;
-            background: linear-gradient(to bottom, #fff 40%, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 850;
+            font-stretch: 112%;
+            font-size: clamp(2.6rem, 7vw, 4.4rem);
+            line-height: 1.02;
+            letter-spacing: -0.025em;
+            text-wrap: balance;
+            max-width: 15ch;
         }
 
-        .tagline {
-            font-size: 1.25rem;
-            color: var(--text-dim);
-            max-width: 600px;
-            margin: 0 auto 40px;
+        h1 em {
+            font-style: normal;
+            color: var(--amber);
         }
 
-        .device-indicator {
-            display: inline-block;
-            padding: 6px 16px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: var(--accent);
-            margin-bottom: 20px;
+        .hero p {
+            margin-top: 26px;
+            max-width: 46ch;
+            font-size: 1.08rem;
+            color: var(--dim);
         }
 
-        /* App Grid */
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 32px;
-            margin-bottom: 100px;
+        @media (prefers-reduced-motion: no-preference) {
+            .hero > * {
+                opacity: 0;
+                transform: translateY(14px);
+                animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+            }
+            .hero > *:nth-child(2) { animation-delay: 0.08s; }
+            .hero > *:nth-child(3) { animation-delay: 0.16s; }
         }
 
-        .app-card {
-            background: var(--card-bg);
-            border-radius: 32px;
-            padding: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
+        @keyframes rise {
+            to { opacity: 1; transform: none; }
         }
 
-        .app-card:hover {
-            transform: translateY(-12px);
-            border-color: rgba(255,255,255,0.15);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        /* ── Shared bits ─────────────────────────────────────── */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
+            border: 1px solid;
         }
 
-        .app-card::after {
+        .chip::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            opacity: 0.8;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
-        .card-floatnet::after { background: var(--gradient-1); }
-        .card-wheelvolume::after { background: var(--gradient-2); }
-        .card-remotecap::after { background: var(--gradient-3); }
+        .chip.live { color: var(--live); border-color: rgba(126, 217, 160, 0.35); }
+        .chip.soon { color: var(--amber); border-color: rgba(255, 178, 83, 0.35); }
+        .chip.soon::before { animation: pulse 2.4s ease-in-out infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.25; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .chip.soon::before { animation: none; }
+        }
 
         .app-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            width: 72px;
+            height: 72px;
+            border-radius: 19px;
             overflow: hidden;
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+            flex-shrink: 0;
         }
 
-        .app-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .icon-floatnet { background: var(--gradient-1); }
-        .icon-wheelvolume { background: var(--gradient-2); }
-        .icon-remotecap { background: var(--gradient-3); }
+        .app-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-family: 'Archivo', sans-serif;
+            font-weight: 800;
+            font-stretch: 108%;
+            font-size: 1.9rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
 
-        .features {
+        .thesis {
+            font-size: 1.05rem;
+            color: var(--dim);
+            margin-top: 6px;
+        }
+
+        .spec {
             list-style: none;
-            margin-bottom: 32px;
-            flex-grow: 1;
-        }
-
-        .features li {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-            margin-bottom: 8px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 26px;
         }
 
-        .features li::before {
-            content: "✨";
-            color: var(--accent);
-            margin-right: 10px;
-            font-size: 0.8rem;
+        .spec li {
+            display: flex;
+            gap: 14px;
+            align-items: baseline;
+            font-size: 0.95rem;
+            color: var(--dim);
+        }
+
+        .spec .k {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text);
+            background: var(--raised);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 2px 8px;
+            white-space: nowrap;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 16px 32px;
-            border-radius: 16px;
+            gap: 10px;
+            padding: 14px 26px;
+            border-radius: 14px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-            gap: 12px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
-        .btn-primary {
-            background-color: var(--text-main);
+        .btn-play {
+            background: var(--text);
             color: var(--bg);
         }
 
-        .btn-primary:hover {
-            background-color: #fff;
-            transform: scale(1.02);
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+            background: #fff;
         }
 
-        .btn-disabled {
-            background-color: #222;
-            color: #555;
-            cursor: not-allowed;
+        .btn-soon {
+            background: transparent;
+            color: var(--amber);
+            border: 1px dashed rgba(255, 178, 83, 0.4);
+            cursor: default;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 100px;
+        /* ── Featured panel (RemoteCap) ──────────────────────── */
+        .featured {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 48px;
+            align-items: center;
+            background: linear-gradient(160deg, var(--surface) 0%, #171410 100%);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 52px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured::before {
+            content: '';
+            position: absolute;
+            top: -180px;
+            right: -120px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(255, 178, 83, 0.09) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .featured .head {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 18px 0 4px;
+        }
+
+        .featured .cta-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .featured .cta-note {
+            font-family: 'IBM Plex Mono', monospace;
             font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 16px;
-            background: rgba(255,255,255,0.05);
-            color: var(--text-dim);
+            color: var(--dim);
         }
 
-        /* Footer */
+        /* CSS watch mock — the viewfinder on a wrist */
+        .watch {
+            justify-self: center;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #0a0908;
+            border: 10px solid #24201a;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.55),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .watch::before {
+            /* strap stubs */
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -34px;
+            transform: translateX(-50%);
+            width: 84px;
+            height: 318px;
+            background: linear-gradient(#1b1813, #15120d);
+            border-radius: 22px;
+            z-index: -1;
+        }
+
+        .watch .ring {
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+        }
+
+        .watch .ring svg { width: 100%; height: 100%; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .watch .ring { animation: sweep 22s linear infinite; }
+        }
+
+        @keyframes sweep {
+            to { transform: rotate(360deg); }
+        }
+
+        .watch .frame {
+            position: absolute;
+            inset: 40px;
+            border-radius: 18px;
+            background:
+                radial-gradient(closest-side at 60% 35%, rgba(255, 178, 83, 0.16), transparent 70%),
+                linear-gradient(200deg, #2c2823 0%, #161310 80%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .watch .timer-chip {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--amber);
+            border: 1px solid rgba(255, 178, 83, 0.55);
+            background: rgba(10, 9, 8, 0.75);
+            border-radius: 100px;
+            padding: 3px 10px;
+            white-space: nowrap;
+        }
+
+        .watch .shutter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .watch .shutter::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        /* ── Live apps grid ──────────────────────────────────── */
+        .section-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--dim);
+            margin: 72px 0 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 96px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(243, 239, 231, 0.18);
+        }
+
+        .card .head {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .card .head-text { flex: 1; }
+
+        .card h2 { font-size: 1.45rem; }
+
+        .card .chip { margin-top: 8px; }
+
+        .card .thesis { margin-top: 18px; font-size: 0.98rem; }
+
+        .card .spec { flex-grow: 1; margin-top: 20px; gap: 10px; }
+
+        .card .spec li { font-size: 0.9rem; }
+
+        .card .btn { margin-top: 30px; align-self: flex-start; }
+
+        .card.floatnet h2 em { color: var(--blue); }
+        .card.wheelvolume h2 em { color: var(--yellow); }
+        h2 em { font-style: normal; }
+
+        /* ── Footer ──────────────────────────────────────────── */
         footer {
-            padding: 60px 0 40px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-            color: var(--text-dim);
+            border-top: 1px solid var(--line);
+            padding: 44px 0 56px;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .footer-links {
-            margin-bottom: 24px;
+            display: flex;
+            gap: 26px;
         }
 
         .footer-links a {
-            color: var(--text-dim);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--dim);
             text-decoration: none;
-            margin: 0 15px;
-            font-size: 0.9rem;
             transition: color 0.2s;
         }
 
-        .footer-links a:hover {
-            color: var(--text-main);
+        .footer-links a:hover { color: var(--text); }
+
+        .footer-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--dim);
         }
 
-        .fox-spirit {
-            color: #ff8c00;
-            font-weight: 600;
-        }
-
-        @media (max-width: 600px) {
-            .device-switcher {
-                top: 10px;
-                right: 10px;
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 860px) {
+            .featured {
+                grid-template-columns: 1fr;
+                padding: 40px 28px;
+                gap: 40px;
             }
+            .watch { width: 220px; height: 220px; }
+            .grid { grid-template-columns: 1fr; }
+            .hero { padding: 72px 0 56px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Device Switcher -->
-    <div class="device-switcher">
-        <button class="device-btn" data-device="desktop" title="Desktop View">
-            💻
-        </button>
-        <button class="device-btn" data-device="tablet" title="Tablet View">
-            📱
-        </button>
-        <button class="device-btn" data-device="mobile" title="Mobile View">
-            📱
-        </button>
-    </div>
+    <div class="container">
+        <nav class="topbar">
+            <a class="wordmark" href="./">JUSTSAMPLE<span>TOOLS</span></a>
+            <a class="contact" href="mailto:chaokai.ideas@gmail.com">chaokai.ideas@gmail.com</a>
+        </nav>
 
-    <header class="container">
-        <div class="device-indicator" id="deviceInfo">
-            Detecting device...
-        </div>
-        <div class="logo">📱🛠️</div>
-        <h1>JustSampleTools</h1>
-        <p class="tagline">Minimalist, powerful utilities designed to make your Android experience seamless and intuitive.</p>
-    </header>
+        <header class="hero">
+            <div class="eyebrow">Independent Android Studio</div>
+            <h1>Small, precise <em>instruments</em> for your Android.</h1>
+            <p>A network meter that names the bandwidth thief. A volume dial that lives on the edge of the screen. A camera remote that turns your watch into a viewfinder. Built one at a time, by one person, to feel exact.</p>
+        </header>
 
-    <main class="container">
-        <div class="app-grid">
-            <!-- FloatNet -->
-            <section class="app-card card-floatnet">
-                <span class="badge">Performance</span>
-                <div class="app-icon icon-floatnet">
-                    <img src="images/floatnet-icon.png" alt="FloatNet Icon">
+        <main>
+            <!-- RemoteCap — featured, coming soon -->
+            <section class="featured" aria-labelledby="remotecap-title">
+                <div>
+                    <span class="chip soon">Coming soon to Google Play</span>
+                    <div class="head">
+                        <div class="app-icon">
+                            <img src="images/remotecap-icon.png" alt="RemoteCap app icon" width="72" height="72">
+                        </div>
+                        <div>
+                            <h2 id="remotecap-title">RemoteCap</h2>
+                            <p class="thesis">The viewfinder on your wrist.</p>
+                        </div>
+                    </div>
+                    <ul class="spec">
+                        <li><span class="k">Live view</span> Your phone camera's screen, mirrored to the watch in real time</li>
+                        <li><span class="k">Shutter</span> Fires any camera app, on any phone brand — no vendor lock-in</li>
+                        <li><span class="k">Pro</span> Zoom ring around the bezel, burst mode, wrist-flick shutter</li>
+                        <li><span class="k">Private</span> Zero internet permission — everything stays phone-to-watch</li>
+                    </ul>
+                    <div class="cta-row">
+                        <!-- Live after production rollout:
+                             https://play.google.com/store/apps/details?id=com.ckzhang.remotecap -->
+                        <span class="btn btn-soon">In closed testing</span>
+                        <span class="cta-note">Wear OS · production release in review</span>
+                    </div>
                 </div>
-                <h2>FloatNet</h2>
-                <ul class="features">
-                    <li>Real-time RX/TX speed monitoring</li>
-                    <li>Culprit Detection: Know which app is eating bandwidth</li>
-                    <li>Floating overlay with minimize/maximize</li>
-                    <li>Ping monitoring (Google, Cloudflare, etc.)</li>
-                    <li>Notification shade live charts</li>
-                </ul>
-                <a href="https://play.google.com/store/apps/details?id=com.ckideas.floatnet" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                    Get it on Google Play
-                </a>
+
+                <div class="watch" role="img" aria-label="Wear OS watch showing a live camera viewfinder with a zoom ring">
+                    <div class="ring" aria-hidden="true">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="47.5" fill="none" stroke="rgba(255,178,83,0.18)" stroke-width="2.5"/>
+                            <path d="M 50 2.5 A 47.5 47.5 0 0 1 91.1 26.3" fill="none" stroke="#ffb253" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="frame" aria-hidden="true"></div>
+                    <span class="timer-chip" aria-hidden="true">Timer 3s ✋</span>
+                    <div class="shutter" aria-hidden="true"></div>
+                </div>
             </section>
 
-            <!-- RemoteCap -->
-            <section class="app-card card-remotecap">
-                <span class="badge">Wear OS</span>
-                <div class="app-icon icon-remotecap">
-                    <img src="images/remotecap-icon.png" alt="RemoteCap Icon">
-                </div>
-                <h2>RemoteCap</h2>
-                <ul class="features">
-                    <li>Live camera viewfinder on your watch</li>
-                    <li>Remote shutter for any camera app, any brand</li>
-                    <li>Zoom ring, burst mode & wrist-flick shutter</li>
-                    <li>Captured photo beamed back to your wrist</li>
-                    <li>No internet permission — device-to-device only</li>
-                </ul>
-                <!-- Live after production rollout:
-                     https://play.google.com/store/apps/details?id=com.ckzhang.remotecap -->
-                <a href="#" class="btn btn-primary btn-disabled" onclick="return false;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                    Coming Soon to Google Play
-                </a>
-            </section>
+            <h3 class="section-label">On Google Play now</h3>
 
-            <!-- WheelVolume -->
-            <section class="app-card card-wheelvolume">
-                <span class="badge">UX Design</span>
-                <div class="app-icon icon-wheelvolume">
-                    <img src="images/wheelvolume-icon.png" alt="WheelVolume Icon">
-                </div>
-                <h2>WheelVolume</h2>
-                <ul class="features">
-                    <li>Revolutionary wheel-based volume control</li>
-                    <li>Seamless side-screen gestures</li>
-                    <li>iPod-style precision scrolling</li>
-                    <li>Integrated media player controls</li>
-                    <li>Extensive theme & position customization</li>
-                </ul>
-                <a href="https://play.google.com/store/apps/details?id=com.ckideas.wheelvolume2" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                    Get it on Google Play
-                </a>
-            </section>
-        </div>
-    </main>
+            <div class="grid">
+                <!-- FloatNet -->
+                <section class="card floatnet" aria-labelledby="floatnet-title">
+                    <div class="head">
+                        <div class="app-icon">
+                            <img src="images/floatnet-icon-512.png" alt="FloatNet app icon" width="72" height="72">
+                        </div>
+                        <div class="head-text">
+                            <h2 id="floatnet-title">Float<em>Net</em></h2>
+                            <span class="chip live">Live on Google Play</span>
+                        </div>
+                    </div>
+                    <p class="thesis">Know exactly what's eating your bandwidth.</p>
+                    <ul class="spec">
+                        <li><span class="k">Meter</span> Floating real-time RX / TX overlay</li>
+                        <li><span class="k">Culprit</span> Names the app hogging your connection</li>
+                        <li><span class="k">Ping</span> Watches Google, Cloudflare or your own host</li>
+                        <li><span class="k">Shade</span> Live charts in the notification drawer</li>
+                    </ul>
+                    <a class="btn btn-play" href="https://play.google.com/store/apps/details?id=com.ckideas.floatnet" target="_blank" rel="noopener noreferrer">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.6.4-1.1.9-1.3L15.2 12 3.9 21.8c-.5-.2-.9-.7-.9-1.3zm13.8-6.2L6.1 21.4l8.5-8.5 2.2 1.4zm3.5-3.6c.4.3.7.8.7 1.3s-.2 1-.7 1.3l-2.4 1.5-2.5-2.8 2.5-2.8 2.4 1.5zM6.1 2.6l10.7 7.1-2.2 1.4L6.1 2.6z"/></svg>
+                        Get it on Google Play
+                    </a>
+                </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="mailto:chaokai.ideas@gmail.com">Contact Us</a>
+                <!-- WheelVolume -->
+                <section class="card wheelvolume" aria-labelledby="wheelvolume-title">
+                    <div class="head">
+                        <div class="app-icon">
+                            <img src="images/wheelvolume-icon-512.png" alt="WheelVolume app icon" width="72" height="72">
+                        </div>
+                        <div class="head-text">
+                            <h2 id="wheelvolume-title">Wheel<em>Volume</em></h2>
+                            <span class="chip live">Live on Google Play</span>
+                        </div>
+                    </div>
+                    <p class="thesis">Volume becomes a dial.</p>
+                    <ul class="spec">
+                        <li><span class="k">Wheel</span> Spin the edge of the screen, iPod-style</li>
+                        <li><span class="k">Precise</span> Single-step control no rocker can match</li>
+                        <li><span class="k">Media</span> Play, skip and seek built into the dial</li>
+                        <li><span class="k">Yours</span> Themes, sizes and placement to taste</li>
+                    </ul>
+                    <a class="btn btn-play" href="https://play.google.com/store/apps/details?id=com.ckideas.wheelvolume2" target="_blank" rel="noopener noreferrer">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17c0-.6.4-1.1.9-1.3L15.2 12 3.9 21.8c-.5-.2-.9-.7-.9-1.3zm13.8-6.2L6.1 21.4l8.5-8.5 2.2 1.4zm3.5-3.6c.4.3.7.8.7 1.3s-.2 1-.7 1.3l-2.4 1.5-2.5-2.8 2.5-2.8 2.4 1.5zM6.1 2.6l10.7 7.1-2.2 1.4L6.1 2.6z"/></svg>
+                        Get it on Google Play
+                    </a>
+                </section>
             </div>
-            <p>Crafted by CK with ❤️</p>
-            <p style="font-size: 0.8rem; margin-top: 10px;">&copy; 2026 JustSampleTools. All rights reserved.</p>
-        </div>
-    </footer>
+        </main>
 
-    <script>
-        // Device detection and switcher
-        const deviceInfo = document.getElementById('deviceInfo');
-        const deviceBtns = document.querySelectorAll('.device-btn');
-        
-        // Auto-detect device type
-        function detectDevice() {
-            const width = window.innerWidth;
-            if (width <= 480) return 'mobile';
-            if (width <= 768) return 'tablet';
-            return 'desktop';
-        }
-
-        // Apply device view
-        function applyView(device) {
-            // Remove all view classes
-            document.body.classList.remove('view-desktop', 'view-tablet', 'view-mobile');
-            
-            // Add current view class
-            document.body.classList.add(`view-${device}`);
-            
-            // Update active button
-            deviceBtns.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.device === device);
-            });
-            
-            // Update indicator
-            const deviceNames = {
-                desktop: 'Desktop View 💻',
-                tablet: 'Tablet View 📱',
-                mobile: 'Mobile View 📱'
-            };
-            deviceInfo.textContent = deviceNames[device];
-            
-            // Save preference
-            localStorage.setItem('preferredView', device);
-        }
-
-        // Initialize
-        function init() {
-            // Check saved preference or auto-detect
-            const savedView = localStorage.getItem('preferredView');
-            const initialView = savedView || detectDevice();
-            applyView(initialView);
-        }
-
-        // Event listeners
-        deviceBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                applyView(btn.dataset.device);
-            });
-        });
-
-        // Re-detect on resize (but respect manual selection)
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                // Only auto-adjust if user hasn't manually selected
-                if (!localStorage.getItem('preferredView')) {
-                    applyView(detectDevice());
-                }
-            }, 250);
-        });
-
-        // Run on load
-        init();
-    </script>
+        <footer>
+            <div class="footer-row">
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy</a>
+                    <a href="mailto:chaokai.ideas@gmail.com">Contact</a>
+                </div>
+                <div class="footer-meta">Crafted by CK 🦊 · © 2026 JustSampleTools</div>
+            </div>
+        </footer>
+    </div>
 
 </body>
 </html>
