@@ -18,6 +18,7 @@
             --text-dim: #94a3b8;
             --gradient-1: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             --gradient-2: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-3: linear-gradient(135deg, #ffb74d 0%, #ef6c00 100%);
         }
 
         * {
@@ -208,6 +209,7 @@
 
         .card-floatnet::after { background: var(--gradient-1); }
         .card-wheelvolume::after { background: var(--gradient-2); }
+        .card-remotecap::after { background: var(--gradient-3); }
 
         .app-icon {
             width: 80px;
@@ -230,6 +232,7 @@
 
         .icon-floatnet { background: var(--gradient-1); }
         .icon-wheelvolume { background: var(--gradient-2); }
+        .icon-remotecap { background: var(--gradient-3); }
 
         h2 {
             font-size: 1.75rem;
@@ -382,6 +385,28 @@
                 <a href="https://play.google.com/store/apps/details?id=com.ckideas.floatnet" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                     Get it on Google Play
+                </a>
+            </section>
+
+            <!-- RemoteCap -->
+            <section class="app-card card-remotecap">
+                <span class="badge">Wear OS</span>
+                <div class="app-icon icon-remotecap">
+                    <img src="images/remotecap-icon.png" alt="RemoteCap Icon">
+                </div>
+                <h2>RemoteCap</h2>
+                <ul class="features">
+                    <li>Live camera viewfinder on your watch</li>
+                    <li>Remote shutter for any camera app, any brand</li>
+                    <li>Zoom ring, burst mode & wrist-flick shutter</li>
+                    <li>Captured photo beamed back to your wrist</li>
+                    <li>No internet permission — device-to-device only</li>
+                </ul>
+                <!-- Live after production rollout:
+                     https://play.google.com/store/apps/details?id=com.ckzhang.remotecap -->
+                <a href="#" class="btn btn-primary btn-disabled" onclick="return false;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Coming Soon to Google Play
                 </a>
             </section>
 
