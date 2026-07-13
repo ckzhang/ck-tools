@@ -344,16 +344,22 @@
             position: absolute;
             inset: 6px;
             border-radius: 50%;
+            /* Park the arc on the right-hand side of the bezel — clear of the timer
+               chip (top) and the shutter (bottom). */
+            transform: rotate(60deg);
         }
 
         .watch .ring svg { width: 100%; height: 100%; }
 
         @media (prefers-reduced-motion: no-preference) {
-            .watch .ring { animation: sweep 22s linear infinite; }
+            /* Sweep back and forth along the side, the way the arc rides a finger
+               turning the real zoom ring — never a full lap through the chip. */
+            .watch .ring { animation: sweep 6s ease-in-out infinite alternate; }
         }
 
         @keyframes sweep {
-            to { transform: rotate(360deg); }
+            from { transform: rotate(30deg); }
+            to { transform: rotate(110deg); }
         }
 
         .watch .face {
