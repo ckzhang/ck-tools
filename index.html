@@ -356,14 +356,25 @@
             to { transform: rotate(360deg); }
         }
 
-        .watch .frame {
+        .watch .face {
             position: absolute;
-            inset: 40px;
-            border-radius: 18px;
+            inset: 18px;
+            border-radius: 50%;
+            overflow: hidden;
             background:
-                radial-gradient(closest-side at 60% 35%, rgba(255, 178, 83, 0.16), transparent 70%),
-                linear-gradient(200deg, #2c2823 0%, #161310 80%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+                radial-gradient(120% 85% at 50% 105%, rgba(255, 140, 40, 0.18) 0%, transparent 60%),
+                radial-gradient(closest-side at 63% 30%, rgba(255, 178, 83, 0.10), transparent 65%),
+                #0b0a08;
+        }
+
+        .watch .face::before {
+            /* rule-of-thirds grid — reads as "camera viewfinder" at a glance */
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 -1px / 100% 33.4%,
+                linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px) -1px 0 / 33.4% 100%;
         }
 
         .watch .timer-chip {
@@ -556,7 +567,7 @@
                             <path d="M 50 2.5 A 47.5 47.5 0 0 1 91.1 26.3" fill="none" stroke="#ffb253" stroke-width="2.5" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <div class="frame" aria-hidden="true"></div>
+                    <div class="face" aria-hidden="true"></div>
                     <span class="timer-chip" aria-hidden="true">Timer 3s ✋</span>
                     <div class="shutter" aria-hidden="true"></div>
                 </div>
